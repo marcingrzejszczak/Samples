@@ -23,6 +23,7 @@ namespace OrderService
                             loggingBuilder.AddDynamicConsole();
                         })
                         .UseStartup<Startup>()
+                        .UseUrls("http://*:5000")
                         .Build();
     }
 }

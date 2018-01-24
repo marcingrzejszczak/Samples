@@ -1,0 +1,28 @@
+﻿description: |
+  Should return an order
+request:
+  method: GET
+  url: /myorders
+response:
+  status: 200
+  headers:
+    Content-Type: application/json; charset=utf-8
+  body: '
+    [
+        {
+        "id": 0,
+        "customerId": "customerId",
+        "firstName": "first name",
+        "lastName": "",
+        "placed": "2018-01-24T11:42:21.250621Z",
+        "total": 0,
+        "email": "email@com.com",
+        "orderItems": []
+        }
+    ]
+  '
+  matchers:
+    body:
+      - path: "$[*].placed"
+        type: by_regex
+        value: '([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.\d{6})?(Z|[+-][01]\d:[0-5]\d)'

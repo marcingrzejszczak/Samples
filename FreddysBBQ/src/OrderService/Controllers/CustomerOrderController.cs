@@ -20,32 +20,31 @@ namespace OrderService.Controllers
         private ILogger<CustomerOrderController> _logger;
         private IMenuService _menuService;
 
-        public CustomerOrderController(OrderContext dbContext, IMenuService menuService, ILoggerFactory fact)
+        public CustomerOrderController(IMenuService menuService, ILoggerFactory fact)
         {
-            _dbContext = dbContext;
+            //_dbContext = dbContext;
             _logger = fact.CreateLogger<CustomerOrderController>();
             _menuService = menuService;
         }
 
         // GET /myorders
         [HttpGet]
-        [Authorize(Policy = "Orders")]
+        //[Authorize(Policy = "Orders")]
         public async Task<List<Order>> GetMyOrders()
         {
-            var customerId = GetCustomerId(this.HttpContext.User.Identity);
-            _logger.LogInformation("CustomerId=" + customerId);
-            if (string.IsNullOrEmpty(customerId))
+            Order order = new Order
             {
-                return new List<Order>();
-            }
-
-            return await _dbContext.Orders.Where(o => o.CustomerId == customerId)
-                        .Include(o => o.OrderItems).ToListAsync();
+                CustomerId = GetCustomerId(this.HttpContext.User.Identity),
+                Email = GetEmail(this.HttpContext.User.Identity),
+                FirstName = GetFirstName(this.HttpContext.User.Identity),
+                LastName = GetLastName(this.HttpContext.User.Identity)
+            };
+            return await Task.FromResult<List<Order>>(new List<Order>(new Order[] { order }));
         }
 
         // POST /myorders
         [HttpPost]
-        [Authorize(Policy = "Orders")]
+        //[Authorize(Policy = "Orders")]
         public async Task<IActionResult> Post([FromBody]Dictionary<long, int?> itemsAndQuantities)
         {
             if (itemsAndQuantities == null)
@@ -135,17 +134,17 @@ namespace OrderService.Controllers
 
         private string GetFirstName(IIdentity identity)
         {
-            return GetClaim(identity, "user_name");
+            return "first name";
         }
 
         private string GetEmail(IIdentity identity)
         {
-            return GetClaim(identity, ClaimTypes.Email);
+            return "email@com.com";
         }
 
         private string GetCustomerId(IIdentity identity)
         {
-            return GetClaim(identity, "user_id");
+            return "customerId";
         }
 
         private string GetClaim(IIdentity identity, string claim)

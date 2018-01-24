@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace OrderService.Controllers
 {
     [Route("/orders")]
-    [Authorize(Policy = "AdminOrders")]
+    //[Authorize(Policy = "AdminOrders")]
     public class OrdersController : Controller
     {
         private OrderContext _dbContext { get; }
